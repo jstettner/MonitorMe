@@ -4,36 +4,48 @@ import SubmitPage from './Submit';
 import Post from './Post';
 import { createContainer } from 'meteor/react-meteor-data';
 import '../api/model.js';
+import { FilesCollection } from 'meteor/ostrio:files';
 
 class App extends Component {
-  submitEntry() {
-    var cameraOptions = {
-      width: 800,
-      height: 600
+  constructor() {
+    super();
+    this.state = {
+      photo: null,
+      caption: "adsf"
     };
 
-    MeteorCamera.getPicture(cameraOptions, function (error, data) {
-      if (error) {
-        // e.g. camera permission denied, or unsupported browser (Safari on iOS, looking at you)
-        console.log(error);
-      } else {
-        // Insert a note in the client's collection; Meteor will persist it on the server.
-        Posts.insert({
-          photo: data,
-          timestamp: new Date(),
-          caption: "asdf"
-        });
-      }
-    });
+    this.submitEntry = this.submitEntry.bind(this);
+  }
+
+  uploadPhoto(event) {
+    if (event.target.files && event.target.files[0]) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            this.setState({photo: e.target.result});
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+  }
+
+  submitEntry() {
+    Posts.insert({
+      photo: this.state.photo,
+      timestamp: new Date(),
+      caption: "asdf"
+    }, () => this.setState({photo: null}));
   }
 
   render() {
     return(
       <div className="container">
+        <input id="fileInput" type="file" accept="image/*" onChange={this.uploadPhoto.bind(this)}/>
+        {this.state.photo &&
+          <img src={this.state.photo}/>
+        }
         <button onClick={this.submitEntry}>
-          Take Photo
+          Submit this entry
         </button>
-        {this.props.posts.map((post) => (<Post id={post.id} src={post.photo} caption={post.caption} timestamp={post.timestamp}/>))}
+        {this.props.posts.map((post) => (<Post key={post._id} src={post.photo} caption={post.caption} timestamp={post.timestamp}/>))}
       </div>
     );
   }
@@ -43,6 +55,6 @@ export default createContainer(() => {
   Meteor.subscribe('posts');
 
   return {
-    posts: Posts.find({}, { sort: { timestamp: -1 } }).fetch,
+    posts: Posts.find({}, { sort: { timestamp: -1 } }).fetch(),
   };
 }, App);

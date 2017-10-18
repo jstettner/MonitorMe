@@ -4,6 +4,7 @@ class Post extends Component {
   render() {
     return(
       <div className="post">
+        <img src={this.props.src}/>
         <h1>
           {this.props.caption}
         </h1>
