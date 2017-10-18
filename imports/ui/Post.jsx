@@ -1,16 +1,71 @@
 import React, { Component } from 'react';
+import Comment from './Comment';
+import { withTracker } from 'meteor/react-meteor-data';
+
+const inputStyle = {
+  maxWidth: '300px',
+};
 
 class Post extends Component {
+  constructor() {
+    super();
+    this.state = {
+      comment: ""
+    };
+
+    this.makeComment = this.makeComment.bind(this);
+    this.setComment = this.setComment.bind(this);
+  }
+
+  setComment(event) {
+    this.setState({
+      comment: event.target.value
+    });
+  }
+
+  makeComment(e) {
+    e.preventDefault();
+    if(this.state.comment != "") {
+      Posts.update({ _id: this.props.id }, { $push: { comments: this.state.comment } });
+    }
+  }
+
   render() {
     return(
-      <div className="post">
-        <hr />
-        <img src={this.props.src}/>
-        <h3>{this.props.caption}</h3>
-        <p>{this.props.timestamp.toString()}</p>
+      <div className="post row">
+        <div className="col-md-6 col-sm-6">
+          <h3>Mess</h3>
+          <img src={this.props.src}/>
+          <h4>{this.props.caption}</h4>
+          <p>{this.props.timestamp.toString()}</p>
+        </div>
+        <div className="col-md-4 col-sm-4">
+          <h3>Blame</h3>
+          {this.props.comments && this.props.comments.length > 0 ?
+          <ul style={{listStyleType:"disc"}}>
+            {this.props.comments.map(function(comment, i){
+               return <Comment key={i} text={comment}/>;})}
+          </ul>
+          :
+            <p>no comments yet.</p>
+          }
+          <form>
+            <div className="form-group">
+              <label htmlFor="exampleInputEmail1">Comment</label>
+              <input type="text" className="form-control" placeholder="Blame Someone" style={inputStyle} value={this.state.comment} onChange={this.setComment.bind(this)} />
+            </div>
+            <button type="submit" onClick={this.makeComment} className="btn btn-default">Submit</button>
+          </form>
+        </div>
       </div>
     );
   }
 }
 
-export default Post;
+export default withTracker(() => {
+  Meteor.subscribe('posts');
+
+  return {
+    posts: Posts.find({}, { sort: { timestamp: -1 } }).fetch(),
+  };
+})(Post);

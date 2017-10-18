@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from './Header';
 import Post from './Post';
-import { createContainer } from 'meteor/react-meteor-data';
+import { withTracker } from 'meteor/react-meteor-data';
 import '../api/model.js';
 import { FilesCollection } from 'meteor/ostrio:files';
 
@@ -36,12 +36,14 @@ class App extends Component {
     });
   }
 
-  submitEntry() {
+  submitEntry(e) {
+    e.preventDefault();
     if(this.state.photo) {
       Posts.insert({
         photo: this.state.photo,
         timestamp: new Date(),
-        caption: (this.state.caption != "" ? this.state.caption : "uncaptioned")
+        caption: (this.state.caption != "" ? this.state.caption : "uncaptioned"),
+        comments: [],
       }, () => this.setState({photo: null, caption: ""}));
     }
   }
@@ -51,8 +53,8 @@ class App extends Component {
       <div className="container column">
         <Header />
         <hr />
-        <form className="submit">
-          <h3>Submit a mess</h3>
+        <h2>Report a Mess</h2>
+        <form className="submit container">
           <div className="form-group">
             <label htmlFor="exampleInputFile">File input</label>
             <input className="pb-5" id="fileInput" type="file" accept="image/*" onChange={this.uploadPhoto.bind(this)}/>
@@ -69,16 +71,20 @@ class App extends Component {
           </div>
           <button type="submit" onClick={this.submitEntry} className="btn btn-default">Submit</button>
         </form>
-        {this.props.posts.map((post) => (<Post key={post._id} src={post.photo} caption={post.caption} timestamp={post.timestamp}/>))}
+        <hr />
+        <h2> Messes </h2>
+        <div className="posts">
+          {this.props.posts.map((post) => (<div><Post key={post._id} id={post._id} src={post.photo} caption={post.caption} timestamp={post.timestamp} comments={post.comments}/><hr /></div>))}
+        </div>
       </div>
     );
   }
 }
 
-export default createContainer(() => {
+export default withTracker(() => {
   Meteor.subscribe('posts');
 
   return {
     posts: Posts.find({}, { sort: { timestamp: -1 } }).fetch(),
   };
-}, App);
+})(App);

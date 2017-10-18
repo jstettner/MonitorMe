@@ -17,5 +17,9 @@ Meteor.startup(() => {
       // anybody can insert
       return true;
     },
+    update: function (doc) {
+      // anybody can insert
+      return true;
+    },
   });
 });

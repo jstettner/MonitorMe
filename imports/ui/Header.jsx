@@ -7,7 +7,7 @@ var rStyle = {
 
 const Header = (props) => (
   <div className="header row">
-    <h1 className="col-md-3">MonitorMe<span style={rStyle}>®</span></h1>
+    <h1 className="">MonitorMe<span style={rStyle}>®</span><small style={{paddingLeft: '20px'}} className="hidden-xs">Let's keep the lounge clean</small></h1>
   </div>
 );
 
