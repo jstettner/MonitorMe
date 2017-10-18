@@ -11,7 +11,7 @@ class App extends Component {
     super();
     this.state = {
       photo: null,
-      caption: "adsf"
+      caption: "..."
     };
 
     this.submitEntry = this.submitEntry.bind(this);
@@ -27,24 +27,40 @@ class App extends Component {
     }
   }
 
+  setCaption(event) {
+    this.setState({
+      caption: event.target.value
+    });
+  }
+
   submitEntry() {
-    Posts.insert({
-      photo: this.state.photo,
-      timestamp: new Date(),
-      caption: "asdf"
-    }, () => this.setState({photo: null}));
+    if(this.state.photo) {
+      Posts.insert({
+        photo: this.state.photo,
+        timestamp: new Date(),
+        caption: (this.state.caption != "" ? this.state.caption : "...")
+      }, () => this.setState({photo: null, caption: "..."}));
+    }
   }
 
   render() {
     return(
       <div className="container">
-        <input id="fileInput" type="file" accept="image/*" onChange={this.uploadPhoto.bind(this)}/>
-        {this.state.photo &&
-          <img src={this.state.photo}/>
-        }
-        <button onClick={this.submitEntry}>
-          Submit this entry
-        </button>
+        <div className="submit">
+          <input id="fileInput" type="file" accept="image/*" onChange={this.uploadPhoto.bind(this)}/>
+          <button onClick={this.submitEntry}>
+            Submit this entry
+          </button>
+          <div>
+          {this.state.photo &&
+            <img src={this.state.photo}/>
+          }
+          </div>
+          <div>
+            <p>Caption: </p>
+            <input id="caption" type="text" value={this.state.caption} onChange={this.setCaption.bind(this)}/>
+          </div>
+        </div>
         {this.props.posts.map((post) => (<Post key={post._id} src={post.photo} caption={post.caption} timestamp={post.timestamp}/>))}
       </div>
     );
