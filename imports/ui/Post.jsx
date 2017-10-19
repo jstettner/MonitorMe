@@ -31,9 +31,8 @@ class Post extends Component {
     return(
       <div className="post row">
         <div className="col-md-5">
-          <h3>Mess:</h3>
+          <h3>{this.props.caption}:</h3>
           <img src={this.props.src}/>
-          <h4>{this.props.caption}</h4>
           <p>{this.props.timestamp.toString()}</p>
         </div>
         <div className="col-md-5">

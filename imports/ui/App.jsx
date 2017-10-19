@@ -5,20 +5,21 @@ import { withTracker } from 'meteor/react-meteor-data';
 import '../api/model.js';
 import { FilesCollection } from 'meteor/ostrio:files';
 import cryptoRandomString from 'crypto-random-string';
+import ReactLoading from 'react-loading';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
       photo: null,
-      caption: ""
+      caption: "",
+      preview: false,
+      uploading: false
     };
 
     if(!localStorage.getItem('user')) {
       localStorage.setItem('user', cryptoRandomString(10));
     }
-
-    console.log(localStorage.getItem('user'));
 
     this.submitEntry = this.submitEntry.bind(this);
   }
@@ -27,7 +28,7 @@ class App extends Component {
     if (event.target.files && event.target.files[0]) {
         let reader = new FileReader();
         reader.onload = (e) => {
-            this.setState({photo: e.target.result});
+            this.setState({photo: e.target.result, preview: true});
         };
         reader.readAsDataURL(event.target.files[0]);
     }
@@ -42,12 +43,13 @@ class App extends Component {
   submitEntry(e) {
     e.preventDefault();
     if(this.state.photo) {
+      this.setState({preview: false, uploading: true})
       Posts.insert({
         photo: this.state.photo,
         timestamp: new Date(),
-        caption: (this.state.caption != "" ? this.state.caption : "uncaptioned"),
+        caption: (this.state.caption != "" ? this.state.caption : "Untitled"),
         comments: [],
-      }, () => this.setState({photo: null, caption: ""}));
+      }, () => this.setState({photo: null, caption: "", preview: false, uploading: false}));
     }
   }
 
@@ -64,9 +66,15 @@ class App extends Component {
             <p className="help-block">You must have a photo to submit.</p>
             <p className="visible-xs visible-sm">IF YOU ARE ON MOBILE, you must enable the camera for your browser in Settings > Privacy > Camera.</p>
           </div>
-          {this.state.photo && (
+          {this.state.preview && (
             <div className="row">
               <img src={this.state.photo}/>
+            </div>
+          )}
+          {this.state.uploading && (
+            <div className="uploading">
+              <h2>STILL UPLOADING... PLEASE WAIT...</h2>
+              <ReactLoading type="cubes" color="#4283f4" />
             </div>
           )}
           <div className="form-group">
@@ -77,6 +85,12 @@ class App extends Component {
         </form>
         <hr />
         <h2> Messes </h2>
+        {this.props.loading && (
+          <div className="uploading">
+            <h2>Loading...</h2>
+            <ReactLoading type="cubes" color="#4283f4" />
+          </div>
+        )}
         <div className="posts">
           {this.props.posts.map((post) => (<div key={post._id}><Post id={post._id} src={post.photo} caption={post.caption} timestamp={post.timestamp} comments={post.comments}/><hr /></div>))}
         </div>
@@ -86,9 +100,11 @@ class App extends Component {
 }
 
 export default withTracker(() => {
-  Meteor.subscribe('posts');
+  const postsHandle = Meteor.subscribe('posts');
+  const loading = !postsHandle.ready();
 
   return {
+    loading,
     posts: Posts.find({}, { sort: { timestamp: -1 } }).fetch(),
   };
 })(App);
