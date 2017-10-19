@@ -28,6 +28,10 @@ input {
 	z-index: -1;
 }
 
+.blue-back {
+  color: #4283f4;
+}
+
 .inputlabel {
   background-color: #4283f4;
   border-radius: 4px;
