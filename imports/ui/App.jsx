@@ -6,10 +6,6 @@ import '../api/model.js';
 import { FilesCollection } from 'meteor/ostrio:files';
 import cryptoRandomString from 'crypto-random-string';
 
-const inputStyle = {
-  maxWidth: '300px',
-};
-
 class App extends Component {
   constructor() {
     super();
@@ -63,9 +59,10 @@ class App extends Component {
         <h2>Report a Mess</h2>
         <form className="submit container">
           <div className="form-group">
-            <label htmlFor="exampleInputFile">File input</label>
-            <input className="pb-5" id="fileInput" type="file" accept="image/*" onChange={this.uploadPhoto.bind(this)}/>
+            <label htmlFor="file" className="inputlabel">{this.state.photo ? "Reupload" : "Upload"} a Mess</label>
+            <input id="file" className="inputfile" type="file" accept="image/*" onChange={this.uploadPhoto.bind(this)}/>
             <p className="help-block">You must have a photo to submit.</p>
+            <p className="visible-xs visible-sm">IF YOU ARE ON MOBILE, you must enable the camera for your browser in Settings > Privacy > Camera.</p>
           </div>
           {this.state.photo && (
             <div className="row">
@@ -73,8 +70,8 @@ class App extends Component {
             </div>
           )}
           <div className="form-group">
-            <label htmlFor="exampleInputEmail1">Photo Caption</label>
-            <input type="text" className="form-control" placeholder="Enter a caption" style={inputStyle} value={this.state.caption} onChange={this.setCaption.bind(this)} />
+            <label htmlFor="caption">Photo Caption</label>
+            <input type="text" id="caption" className="form-control" placeholder="Enter a caption" value={this.state.caption} onChange={this.setCaption.bind(this)} />
           </div>
           <button type="submit" onClick={this.submitEntry} className="btn btn-default">Submit</button>
         </form>

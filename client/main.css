@@ -1,3 +1,9 @@
+html, body {
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+}
+
 img {
   max-width: 100%;
   max-height: 500px;
@@ -8,4 +14,34 @@ img {
   word-wrap: break-word;
   max-width: 100%;
   max-height: 350px;
+}
+
+input {
+  max-width: 300px;
+}
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputlabel {
+  background-color: #4283f4;
+  border-radius: 4px;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  margin: 4px 2px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+label {
+	cursor: pointer; /* "hand" cursor */
 }
