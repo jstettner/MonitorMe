@@ -1,0 +1,7 @@
+{
+  "galaxy.meteor.com": {
+    "env": {
+      "MONGO_URL": "mongodb://loungemonitor:0H0gNuYDr7c3@ds125195.mlab.com:25195/posts"
+    }
+  }
+}
