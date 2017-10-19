@@ -4,6 +4,7 @@ import Post from './Post';
 import { withTracker } from 'meteor/react-meteor-data';
 import '../api/model.js';
 import { FilesCollection } from 'meteor/ostrio:files';
+import cryptoRandomString from 'crypto-random-string';
 
 const inputStyle = {
   maxWidth: '300px',
@@ -16,6 +17,12 @@ class App extends Component {
       photo: null,
       caption: ""
     };
+
+    if(!localStorage.getItem('user')) {
+      localStorage.setItem('user', cryptoRandomString(10));
+    }
+
+    console.log(localStorage.getItem('user'));
 
     this.submitEntry = this.submitEntry.bind(this);
   }
@@ -74,7 +81,7 @@ class App extends Component {
         <hr />
         <h2> Messes </h2>
         <div className="posts">
-          {this.props.posts.map((post) => (<div><Post key={post._id} id={post._id} src={post.photo} caption={post.caption} timestamp={post.timestamp} comments={post.comments}/><hr /></div>))}
+          {this.props.posts.map((post) => (<div key={post._id}><Post id={post._id} src={post.photo} caption={post.caption} timestamp={post.timestamp} comments={post.comments}/><hr /></div>))}
         </div>
       </div>
     );

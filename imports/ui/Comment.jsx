@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 class Comment extends Component {
   render() {
     return(
-      <li className="comment">
-        <p>{this.props.text}</p>
-      </li>
+      <div className="comment">
+        <p><em>{this.props.user}</em>: {this.props.text}</p>
+      </div>
     );
   }
 }

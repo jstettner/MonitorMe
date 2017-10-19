@@ -26,26 +26,27 @@ class Post extends Component {
   makeComment(e) {
     e.preventDefault();
     if(this.state.comment != "") {
-      Posts.update({ _id: this.props.id }, { $push: { comments: this.state.comment } });
+      Posts.update({ _id: this.props.id }, { $push: { comments: {user: localStorage.getItem('user'), text: this.state.comment} } });
     }
+    this.setState({comment: ""});
   }
 
   render() {
     return(
       <div className="post row">
-        <div className="col-md-6 col-sm-6">
+        <div className="col-md-5">
           <h3>Mess</h3>
           <img src={this.props.src}/>
           <h4>{this.props.caption}</h4>
           <p>{this.props.timestamp.toString()}</p>
         </div>
-        <div className="col-md-4 col-sm-4">
+        <div className="col-md-5">
           <h3>Blame</h3>
           {this.props.comments && this.props.comments.length > 0 ?
-          <ul style={{listStyleType:"disc"}}>
-            {this.props.comments.map(function(comment, i){
-               return <Comment key={i} text={comment}/>;})}
-          </ul>
+          <div className="comments">
+            {this.props.comments.slice(0).reverse().map(function(comment, i){
+               return <Comment key={i} user={comment.user} text={comment.text}/>;})}
+          </div>
           :
             <p>no comments yet.</p>
           }
