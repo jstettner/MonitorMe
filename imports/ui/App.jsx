@@ -86,7 +86,7 @@ class App extends Component {
         <h2> Messes </h2>
         {this.props.loading && (
           <div className="uploading">
-            <h2>Loading...</h2>
+            <h2>Establishing Connection...</h2>
             <ReactLoading type="cubes" color="#4283f4" />
           </div>
         )}
