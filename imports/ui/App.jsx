@@ -46,7 +46,7 @@ class App extends Component {
       Posts.insert({
         photo: this.state.photo,
         timestamp: new Date(),
-        caption: (this.state.caption != "" ? this.state.caption : "Untitled"),
+        caption: (this.state.caption != "" ? this.state.caption.trim() : "Untitled"),
         comments: [],
       }, () => this.setState({photo: null, caption: "", preview: false, uploading: false}));
     }
