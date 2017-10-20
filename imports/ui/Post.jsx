@@ -33,7 +33,7 @@ class Post extends Component {
         <div className="col-md-5">
           <h3>{this.props.caption}:</h3>
           <img src={this.props.src}/>
-          <p>{this.props.timestamp.toString()}</p>
+          <p>{this.props.timestamp.toString()}<small> (id: {this.props.id})</small></p>
         </div>
         <div className="col-md-5">
           <h3>Blame:</h3>
