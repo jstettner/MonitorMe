@@ -4,7 +4,6 @@ import Post from './Post';
 import { withTracker } from 'meteor/react-meteor-data';
 import '../api/model.js';
 import { FilesCollection } from 'meteor/ostrio:files';
-import cryptoRandomString from 'crypto-random-string';
 import ReactLoading from 'react-loading';
 
 class App extends Component {
@@ -18,7 +17,7 @@ class App extends Component {
     };
 
     if(!localStorage.getItem('user')) {
-      localStorage.setItem('user', cryptoRandomString(10));
+      localStorage.setItem('user', Random.id(10));
     }
 
     this.submitEntry = this.submitEntry.bind(this);
