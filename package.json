@@ -9,6 +9,7 @@
     "crypto-random-string": "^1.0.0",
     "meteor-node-stubs": "~0.2.4",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "react-loading": "^1.0.0"
   }
 }
