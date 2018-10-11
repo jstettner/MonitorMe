@@ -18,11 +18,11 @@ Meteor.startup(() => {
       return true;
     },
     remove: function (doc) {
-      // anybody can insert
+      // anybody can remove (intentionally insecure to meet the school's requirements)
       return true;
     },
     update: function (doc) {
-      // anybody can insert
+      // anybody can update
       return true;
     },
   });
